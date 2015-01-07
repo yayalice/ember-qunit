@@ -14,12 +14,18 @@ define(
 
       function wrapper() {
         var context = testContext.get();
-        
+
         resetViews();
         var result = callback.call(context);
 
         function failTestOnPromiseRejection(reason) {
-          ok(false, reason);
+          var message;
+          if (reason instanceof Error) {
+            message = reason.stack;
+          } else {
+            message = Ember.inspect(reason);
+          }
+          ok(false, message);
         }
 
         Ember.run(function(){
